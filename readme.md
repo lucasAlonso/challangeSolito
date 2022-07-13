@@ -29,11 +29,15 @@ The goals fallowing enumerated should be discussed and implemented in the next i
 
 ## thoughts,
 
+Firsts thoughts,
 First of all, I would remark on the pros of developing a Solito cross-platform app, in my consideration having only one code for all platforms leaves less room for bugs and mistakes and it is time efficient.
-Regaring web3 development adds faster auditability for descentralizated endpoints. I consider this one the big adavantage.
-In the other hand having a lot of dependecys could become a problem in a near future.
-I rushed some kinf of operational MVP and now have to go for the big questions,
-regarding croos-platforms data fetching i think that there are two mains options, conditional rendering, for cases that server-side rendering would be benefitial. In this escenario the isWebMobile hook created by [showtime.xyz](https://github.com/showtime-xyz/showtime-frontend/blob/staging/packages/app/hooks/use-is-mobile-web.ts) could be helpfull. In cases that server-side rendering its not needed client-side data fetching could be done.
+Regarding web3 development adds faster auditability for decentralized endpoints. I consider this one the big advantage.
+On the other hand, having a lot of dependencies could become a problem in a near future.
+
+I rushed some kind of operational MVP and now have to go for the big questions,
+
+Regarding cross-platform data fetching I think that there are two main options, conditional rendering, for cases that server-side rendering would be beneficial. In this scenario, the isWebMobile hook created by [showtime.xyz](https://github.com/showtime-xyz/showtime-frontend/blob/staging/packages/app/hooks/use-is-mobile-web.ts) could be helpful. In cases where server-side rendering is not needed client-side data fetching could be done.
 
 Regarding cross-platform login I think would be best to force nextJs to do client-side rendering and find a way to store credentials both on web and mobile platforms.
-Lastly, I would need more investigation about cross-platform https clients, in this aspect would be needed to switch between server-side responses and client-side ones. Maybe a selector? maybe isolate the server-side requests? further investigation needs to be done.
+
+Lastly, I would need more investigation about cross-platform https clients, in this aspect would be needed to switch between server-side responses and client-side ones. Maybe a selector? maybe isolathe the server-side requests? further investigation need to be done.
