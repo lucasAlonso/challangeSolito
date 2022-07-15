@@ -4,19 +4,15 @@ import React, { useEffect, useState } from 'react'
 import {
   Avatar,
   Center,
-  Image,
   HStack,
   Text,
   Heading,
-  Code,
-  Link,
+  Spinner,
   VStack,
-  Button,
-  AspectRatio,
-  FormControl,
-  Stack,
-  Input,
+  Flex,
+  Divider,
   Box,
+  ScrollView,
 } from 'native-base'
 import { ColorModeSwitch } from '../../components'
 interface DataCoin {
@@ -37,14 +33,12 @@ interface DataCoin {
 
   }], exchanges: string[]
 
-
-
 }
 
 
 export function Trending() {
 
-  const [data, setData] = useState(null)
+  const [data: DataCoin, setData] = useState(null)
   const [isLoading, setLoading] = useState(false)
   useEffect(() => {
     setLoading(true)
@@ -57,11 +51,9 @@ export function Trending() {
       })
 
   }, [])
-  if (isLoading) return <Center
-    flex={1}
-    _dark={{ bg: 'blueGray.900' }}
-    _light={{ bg: 'blueGray.50' }}
-  ><VStack alignItems="center" space="md"><Heading>Loading . . .</Heading></VStack></Center>
+  if (isLoading) return <Center flex="1"><HStack space={2} justifyContent="center">
+    <Spinner size="lg" accessibilityLabel="Loading Info" />
+  </HStack></Center>;
   if (!data) return <Heading>ERROR NO DATA</Heading>
   return (
     <Center
@@ -69,31 +61,35 @@ export function Trending() {
       _dark={{ bg: 'blueGray.900' }}
       _light={{ bg: 'blueGray.50' }}
     >
-      <VStack alignItems="center" space="md">
+      <ScrollView>
+        <VStack alignItems="center" space="md">
 
-        <Heading>Trending Cryptos</Heading>
+          <Heading>Trending Cryptos</Heading>
 
-        {
-          data.coins.map((element) => {
-            return (<Box key={element.item.coin_id}><Avatar bg="green.500" source={{
-              uri: element.item.small
-            }}>
-              {element.item.symbol}
-            </Avatar>
-              <SolitoLink href={`/coin/${element.item.id}`}>
-                <Button pointerEvents="none" variant="outline" colorScheme="coolGray">
-                  <Text>{element.item.symbol}</Text>
-                </Button>
-              </SolitoLink>
+          {
+            data.coins.map((element) => {
+              return (
+                <SolitoLink key={element.item.coin_id} href={`/coin/${element.item.id}`}>
+                  <Box alignItems="center" shadow="4" p="5" m="2" borderRadius="md">
+                    <Box w="160">
+                      <Heading size="md" mx="auto">{element.item.name}</Heading>
+                      <Divider my="2" />
+                      <Flex mx="3" direction="row" justify="space-evenly" h="60">
+                        <Avatar bg="green.500" source={{ uri: element.item.small }}></Avatar>
+                        <Divider orientation="vertical" mx="3" />
+                        <Heading size="md" py="2">{element.item.symbol}</Heading>
+                      </Flex>
+                    </Box>
+                  </Box>
+                </SolitoLink>
+              )
+            })
+          }
 
-            </Box>)
-          })
-        }
 
-
-      </VStack>
+        </VStack>
+      </ScrollView>
       <ColorModeSwitch />
-
     </Center >
   )
 }

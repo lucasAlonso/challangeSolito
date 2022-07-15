@@ -13,7 +13,7 @@ It was required to :
 
 - [x] Create a coin detail screen, it should include it's name, price, market liquidity and whatever you feel is relevant.
 
-- [ ] It would be great if you can manage to find a solution to implement a cross platform chart component.
+- [x] It would be great if you can manage to find a solution to implement a cross platform chart component.
 
 ---
 
@@ -41,3 +41,13 @@ Regarding cross-platform data fetching I think that there are two main options, 
 Regarding cross-platform login I think would be best to force nextJs to do client-side rendering and find a way to store credentials both on web and mobile platforms.
 
 Lastly, I would need more investigation about cross-platform https clients, in this aspect would be needed to switch between server-side responses and client-side ones. Maybe a selector? maybe isolathe the server-side requests? further investigation need to be done.
+
+---
+
+### Update 15/7
+
+Cross platform chart component Done with react-native-svg-charts.
+
+A missing width take me a few hours, SVG, you love it and hate it at the same time.
+
+![Aliens](https://media.giphy.com/media/BBkKEBJkmFbTG/giphy.gif)
