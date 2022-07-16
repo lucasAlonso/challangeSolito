@@ -1,6 +1,9 @@
 import { Link as SolitoLink } from 'solito/link'
+import { useRouter } from 'solito/router'
 import React, { useEffect, useState } from 'react'
-
+import { useAuth } from 'app/hooks/useAuthContext'
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from 'app/components/firebase';
 import {
   Avatar,
   Center,
@@ -15,6 +18,7 @@ import {
   ScrollView,
 } from 'native-base'
 import { ColorModeSwitch } from '../../components'
+import { LogOut } from '../../components/LogOut'
 interface DataCoin {
   coins: [{
     item: {
@@ -38,8 +42,15 @@ interface DataCoin {
 
 export function Trending() {
 
-  const [data: DataCoin, setData] = useState(null)
-  const [isLoading, setLoading] = useState(false)
+  const { idToken, setIdToken } = useAuth();
+  const [data: DataCoin, setData] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+  const { replace } = useRouter();
+
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) { replace('/home') }
+  });
   useEffect(() => {
     setLoading(true)
     fetch('https://api.coingecko.com/api/v3/search/trending')
@@ -47,10 +58,10 @@ export function Trending() {
       .then((data) => {
         setData(data)
         setLoading(false)
-        console.log(data)
       })
 
   }, [])
+
   if (isLoading) return <Center flex="1"><HStack space={2} justifyContent="center">
     <Spinner size="lg" accessibilityLabel="Loading Info" />
   </HStack></Center>;
@@ -90,6 +101,7 @@ export function Trending() {
         </VStack>
       </ScrollView>
       <ColorModeSwitch />
+      <LogOut />
     </Center >
   )
 }

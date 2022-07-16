@@ -1,7 +1,9 @@
 //showtimexyz 
 import { useState, useEffect } from "react";
 /**
- * Cant make expo to show correct user Agent, maybe bug?
+ * TOdo 
+ * try to reach user agent in mobile apps
+ * 
  */
 function useIsMobileWeb() {
   const [userAgent, setUserAgent] = useState("");

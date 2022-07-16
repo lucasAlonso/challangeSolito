@@ -50,4 +50,17 @@ Cross platform chart component Done with react-native-svg-charts.
 
 A missing width take me a few hours, SVG, you love it and hate it at the same time.
 
-![Aliens](https://media.giphy.com/media/BBkKEBJkmFbTG/giphy.gif)
+![Homer](https://media.giphy.com/media/BBkKEBJkmFbTG/giphy.gif)
+
+---
+
+### Update 16/7
+
+Login done with Firebase
+
+~~tokenId for login authentification shared between components througt useContext Hook, not the best solution imo.~~
+
+thxs estakouverflou https://stackoverflow.com/questions/72179070/react-native-bundling-failure-error-message-while-trying-to-resolve-module-i
+
+replaced UseContext with firebaseAuth
+nevertheless, hook kept​ for sharing some thoughts regarding data persistence through cross-platform apps.

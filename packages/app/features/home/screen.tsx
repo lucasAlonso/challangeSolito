@@ -4,6 +4,9 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useRouter } from 'solito/router'
 import { useIsMobileWeb } from "../../hooks/use-is-mobile-web";
 import { SvgComponent } from './greenerlogo'
+import { auth } from "../../components/firebase"
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { useAuth } from 'app/hooks/useAuthContext'
 
 import {
   Center,
@@ -18,6 +21,7 @@ import {
 import { ColorModeSwitch } from '../../components'
 
 
+
 type Inputs = {
   email: string,
   password: string,
@@ -26,12 +30,37 @@ type Inputs = {
 
 export function HomeScreen() {
 
+
+  const { idToken, setIdToken } = useAuth();
   const { replace } = useRouter();
   const { control, handleSubmit, formState: { errors } } = useForm<Inputs>();
+
   const { isMobileWeb } = useIsMobileWeb();
-  const onSubmit: SubmitHandler<Inputs> = data => { isMobileWeb ? replace('/onboard') : replace('/trending'); }
+
+
+
+  /* onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      replace('/')
+    }
+  }); */
+  const onSubmit: SubmitHandler<Inputs> = data => {
+    console.log(data.email, data.password)
+
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(userCredential => {
+
+        setIdToken(userCredential._tokenResponse.idToken);
+        isMobileWeb ? replace('/onboard') : replace('/trending');
+      })
+      .catch(error => {
+        console.log(error.message)
+      });
+  }
+  // }
 
   return (
+
     <Center
       flex={1}
       _dark={{ bg: 'blueGray.900' }}
@@ -107,3 +136,6 @@ export function HomeScreen() {
     </Center>
   )
 }
+
+
+

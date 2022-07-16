@@ -9,7 +9,7 @@ const projectRoot = __dirname
 const workspaceRoot = path.resolve(__dirname, '../..')
 
 const config = getDefaultConfig(__dirname)
-
+config.resolver.assetExts.push('cjs')
 config.watchFolders = [workspaceRoot]
 config.resolver.nodeModulesPath = [
   path.resolve(projectRoot, 'node_modules'),
