@@ -2,6 +2,7 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "noUncheckedIndexedAccess": true,
+    "allowSyntheticDefaultImports":true,
     "paths": {
       "app/*": ["./packages/app/*"]
     }

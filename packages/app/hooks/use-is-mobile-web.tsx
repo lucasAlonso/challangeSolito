@@ -6,26 +6,20 @@ import { useState, useEffect } from "react";
  * 
  */
 function useIsMobileWeb() {
-  const [userAgent, setUserAgent] = useState("");
-  const [isMobileWeb, setIsMobileWeb] = useState(true);
+  const [isMobileWeb, setIsMobileWeb] = useState('');
 
   useEffect(() => {
     const userAgent = window?.navigator?.userAgent;
-    setUserAgent(userAgent);
     if (userAgent === undefined) {
       setIsMobileWeb(true)
 
     } else {
-
-      setIsMobileWeb(
-        / android /.test(userAgent) || /iPad|iPhone|iPod|ios/.test(userAgent)
-      );
+      setIsMobileWeb(false);
     }
 
   }, []);
 
   return {
-    userAgent,
     isMobileWeb,
   };
 }

@@ -1,9 +1,10 @@
+import React, { useEffect, useState } from 'react'
 import { Link as SolitoLink } from 'solito/link'
 import { useRouter } from 'solito/router'
-import React, { useEffect, useState } from 'react'
-import { useAuth } from 'app/hooks/useAuthContext'
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from 'app/components/firebase';
+import { useIsMobileWeb } from 'app/hooks/use-is-mobile-web';
+
 import {
   Avatar,
   Center,
@@ -19,6 +20,8 @@ import {
 } from 'native-base'
 import { ColorModeSwitch } from '../../components'
 import { LogOut } from '../../components/LogOut'
+
+
 interface DataCoin {
   coins: [{
     item: {
@@ -39,69 +42,124 @@ interface DataCoin {
 
 }
 
+/**
+ * Trendind Component
+ * @param dataRes in case of SSR, check apps/next/pages/trending/index.tsx for more detail 
+ * 
+ */
 
-export function Trending() {
-
-  const { idToken, setIdToken } = useAuth();
-  const [data: DataCoin, setData] = useState(null);
+export function Trending({ dataRes }) {
+  const [data, setData] = useState<DataCoin | null>(null);
   const [isLoading, setLoading] = useState(true);
   const { replace } = useRouter();
-
+  const { isMobileWeb } = useIsMobileWeb();
 
   onAuthStateChanged(auth, (user) => {
     if (!user) { replace('/home') }
   });
+
   useEffect(() => {
     setLoading(true)
+    console.log(isMobileWeb)
     fetch('https://api.coingecko.com/api/v3/search/trending')
       .then((res) => res.json())
       .then((data) => {
+        console.log("client")
         setData(data)
-        setLoading(false)
+        setLoading(false);
       })
 
   }, [])
 
-  if (isLoading) return <Center flex="1"><HStack space={2} justifyContent="center">
-    <Spinner size="lg" accessibilityLabel="Loading Info" />
-  </HStack></Center>;
-  if (!data) return <Heading>ERROR NO DATA</Heading>
-  return (
-    <Center
-      flex={1}
-      _dark={{ bg: 'blueGray.900' }}
-      _light={{ bg: 'blueGray.50' }}
-    >
-      <ScrollView>
-        <VStack alignItems="center" space="md">
+  if (!dataRes) {
+    if (isLoading) return <Center flex="1"><HStack space={2} justifyContent="center">
+      <Spinner size="lg" accessibilityLabel="Loading Info" />
+    </HStack></Center>;
+    if (!data) return <Text>No Data</Text>
+  }
 
-          <Heading>Trending Cryptos</Heading>
+  if (isMobileWeb) {
+    return (
+      <Center
+        flex={1}
+        _dark={{ bg: 'blueGray.900' }}
+        _light={{ bg: 'blueGray.50' }}
+      >
+        <ScrollView>
+          <VStack alignItems="center" space="md">
 
-          {
-            data.coins.map((element) => {
-              return (
-                <SolitoLink key={element.item.coin_id} href={`/coin/${element.item.id}`}>
-                  <Box alignItems="center" shadow="4" p="5" m="2" borderRadius="md">
-                    <Box w="160">
-                      <Heading size="md" mx="auto">{element.item.name}</Heading>
-                      <Divider my="2" />
-                      <Flex mx="3" direction="row" justify="space-evenly" h="60">
-                        <Avatar bg="green.500" source={{ uri: element.item.small }}></Avatar>
-                        <Divider orientation="vertical" mx="3" />
-                        <Heading size="md" py="2">{element.item.symbol}</Heading>
-                      </Flex>
+            <Heading>Trending Cryptos</Heading>
+
+            {
+              data?.coins.map((element) => {
+                console.log("Client Side Rendering")
+                //Todo remove console log
+                return (
+                  <SolitoLink key={element.item.coin_id} href={`/coin/${element.item.id}`}>
+                    <Box alignItems="center" shadow="4" p="5" m="2" borderRadius="md">
+                      <Box w="160">
+                        <Heading size="md" mx="auto">{element.item.name}</Heading>
+                        <Divider my="2" />
+                        <Flex mx="3" direction="row" justify="space-evenly" h="60">
+                          <Avatar bg="green.500" source={{ uri: element.item.small }}></Avatar>
+                          <Divider orientation="vertical" mx="3" />
+                          <Heading size="md" py="2">{element.item.symbol}</Heading>
+                        </Flex>
+                      </Box>
                     </Box>
-                  </Box>
-                </SolitoLink>
-              )
-            })
-          }
+                  </SolitoLink>
+                )
+              })
+            }
 
 
-        </VStack>
-      </ScrollView>
-      <ColorModeSwitch />
-      <LogOut />
-    </Center >
-  )
+          </VStack>
+        </ScrollView>
+        <ColorModeSwitch />
+        <LogOut />
+      </Center >
+    )
+  }
+  else {
+    return (
+      <Center
+        flex={1}
+        _dark={{ bg: 'blueGray.900' }}
+        _light={{ bg: 'blueGray.50' }}
+      >
+        <ScrollView>
+          <VStack alignItems="center" space="md">
+
+            <Heading>Trending Cryptos</Heading>
+
+            {
+              dataRes?.coins.map((element) => {
+                console.log("server Side Rendering")
+                //Todo remove console log
+                return (
+                  <SolitoLink key={element.item.coin_id} href={`/coin/${element.item.id}`}>
+                    <Box alignItems="center" shadow="4" p="5" m="2" borderRadius="md">
+                      <Box w="160">
+                        <Heading size="md" mx="auto">{element.item.name}</Heading>
+                        <Divider my="2" />
+                        <Flex mx="3" direction="row" justify="space-evenly" h="60">
+                          <Avatar bg="green.500" source={{ uri: element.item.small }}></Avatar>
+                          <Divider orientation="vertical" mx="3" />
+                          <Heading size="md" py="2">{element.item.symbol}</Heading>
+                        </Flex>
+                      </Box>
+                    </Box>
+                  </SolitoLink>
+                )
+              })
+            }
+
+
+          </VStack>
+        </ScrollView>
+        <ColorModeSwitch />
+        <LogOut />
+      </Center >
+    )
+  }
 }

@@ -64,3 +64,13 @@ thxs estakouverflou https://stackoverflow.com/questions/72179070/react-native-bu
 
 replaced UseContext with firebaseAuth
 nevertheless, hook kept​ for sharing some thoughts regarding data persistence through cross-platform apps.
+
+---
+
+### Update 17/7
+
+Server Side Rendering is reached with serverSideProps on trending and detailed pages, also some minor fixes on login page and some style improvement.
+
+Added missing types and improved the code readibility
+
+![Happy](https://media.giphy.com/media/IwAZ6dvvvaTtdI8SD5/giphy-downsized.gif)

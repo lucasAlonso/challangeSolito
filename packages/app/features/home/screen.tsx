@@ -1,12 +1,12 @@
 import { Link as SolitoLink } from 'solito/link'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useRouter } from 'solito/router'
 import { useIsMobileWeb } from "../../hooks/use-is-mobile-web";
 import { SvgComponent } from './greenerlogo'
+
 import { auth } from "../../components/firebase"
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { useAuth } from 'app/hooks/useAuthContext'
 
 import {
   Center,
@@ -17,6 +17,12 @@ import {
   FormControl,
   Input,
   Box,
+  HStack,
+  Alert,
+  Text,
+  IconButton,
+  CloseIcon,
+  Collapse
 } from 'native-base'
 import { ColorModeSwitch } from '../../components'
 
@@ -27,40 +33,36 @@ type Inputs = {
   password: string,
 };
 
+/**
+ * Home Component
+ *  
+ */
 
 export function HomeScreen() {
 
-
-  const { idToken, setIdToken } = useAuth();
   const { replace } = useRouter();
   const { control, handleSubmit, formState: { errors } } = useForm<Inputs>();
-
   const { isMobileWeb } = useIsMobileWeb();
+  const [hasLoginError, setHasLoginError] = useState<string | boolean>(false)
 
-
-
-  /* onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      replace('/')
-    }
-  }); */
   const onSubmit: SubmitHandler<Inputs> = data => {
-    console.log(data.email, data.password)
 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(userCredential => {
-
-        setIdToken(userCredential._tokenResponse.idToken);
         isMobileWeb ? replace('/onboard') : replace('/trending');
       })
       .catch(error => {
+        if (error.code = 'auth/user-not-found') {
+          setHasLoginError("Bad login credentials, please try again")
+
+        }
         console.log(error.message)
+        console.log(error.code)
+
       });
   }
-  // }
 
   return (
-
     <Center
       flex={1}
       _dark={{ bg: 'blueGray.900' }}
@@ -126,8 +128,27 @@ export function HomeScreen() {
             }}>
               Password should contain between 3 and 8 characters.
             </FormControl.ErrorMessage>
-          </FormControl>
+            <HStack space={2} flexShrink={1}>
 
+            </HStack>
+          </FormControl>
+          <Collapse isOpen={hasLoginError !== false}>
+            <Alert w="100%" status={"error"}>
+              <VStack space={2} flexShrink={1} w="100%">
+                <HStack flexShrink={1} space={2} justifyContent="space-between">
+                  <HStack space={2} flexShrink={1}>
+                    <Alert.Icon mt="1" />
+                    <Text fontSize="md" color="coolGray.800">
+                      {hasLoginError}
+                    </Text>
+                  </HStack>
+                  <IconButton variant="unstyled" _focus={{
+                    borderWidth: 0
+                  }} icon={<CloseIcon size="3" color="coolGray.600" />} onPress={() => setHasLoginError(false)} />
+                </HStack>
+              </VStack>
+            </Alert>
+          </Collapse>
           <Button onPress={handleSubmit(onSubmit)} mt="2" colorScheme="indigo">
             Sign in
           </Button>
