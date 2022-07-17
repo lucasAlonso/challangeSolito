@@ -71,6 +71,6 @@ nevertheless, hook kept​ for sharing some thoughts regarding data persistence 
 
 Server Side Rendering is reached with serverSideProps on trending and detailed pages, also some minor fixes on login page and some style improvement.
 
-Added missing types and improved the code readibility
+Added missing types and code readibility improved
 
 ![Happy](https://media.giphy.com/media/IwAZ6dvvvaTtdI8SD5/giphy-downsized.gif)
