@@ -1,16 +1,15 @@
-import { Link as SolitoLink } from 'solito/link'
 import React, { useState } from 'react'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form'
+import { useIsMobileWeb } from '../../hooks/use-is-mobile-web'
 import { useRouter } from 'solito/router'
-import { useIsMobileWeb } from "../../hooks/use-is-mobile-web";
 import { SvgComponent } from './greenerlogo'
 
-import { auth } from "../../components/firebase"
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth } from '../../components/firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { ColorModeSwitch } from '../../components'
 
 import {
   Center,
-  Image,
   Heading,
   VStack,
   Button,
@@ -22,46 +21,40 @@ import {
   Text,
   IconButton,
   CloseIcon,
-  Collapse
+  Collapse,
 } from 'native-base'
-import { ColorModeSwitch } from '../../components'
-
-
 
 type Inputs = {
-  email: string,
-  password: string,
-};
+  email: string
+  password: string
+}
 
 /**
  * Home Component
- *  
+ *
  */
 
-export function HomeScreen() {
-
-  const { replace } = useRouter();
-  const { control, handleSubmit, formState: { errors } } = useForm<Inputs>();
-  const { isMobileWeb } = useIsMobileWeb();
+export function HomeScreen(): JSX.Element {
+  const { replace } = useRouter()
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>()
+  const { isMobileWeb } = useIsMobileWeb()
   const [hasLoginError, setHasLoginError] = useState<string | boolean>(false)
 
-  const onSubmit: SubmitHandler<Inputs> = data => {
-
+  const onSubmit: SubmitHandler<Inputs> = (data): void => {
     signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(userCredential => {
-        isMobileWeb ? replace('/onboard') : replace('/trending');
+      .then((userCredential) => {
+        isMobileWeb ? replace('/onboard') : replace('/trending')
       })
-      .catch(error => {
-        if (error.code = 'auth/user-not-found') {
-          setHasLoginError("Bad login credentials, please try again")
-
+      .catch((error) => {
+        if ((error.code = 'auth/user-not-found')) {
+          setHasLoginError('Bad login credentials, please try again')
         }
-        console.log(error.message)
-        console.log(error.code)
-
-      });
+      })
   }
-
   return (
     <Center
       flex={1}
@@ -92,16 +85,20 @@ export function HomeScreen() {
               )}
               name="email"
               rules={{
-                required: 'Field is required', minLength: 3, pattern: {
+                required: 'Field is required',
+                minLength: 3,
+                pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "invalid email address"
-                }
+                  message: 'invalid email address',
+                },
               }}
               defaultValue=""
             />
-            <FormControl.ErrorMessage _text={{
-              fontSize: 'xs'
-            }}>
+            <FormControl.ErrorMessage
+              _text={{
+                fontSize: 'xs',
+              }}
+            >
               Check email format
             </FormControl.ErrorMessage>
           </FormControl>
@@ -119,21 +116,24 @@ export function HomeScreen() {
                 />
               )}
               name="password"
-              rules={{ required: 'Field is required', minLength: 3, maxLength: 8 }}
+              rules={{
+                required: 'Field is required',
+                minLength: 3,
+                maxLength: 8,
+              }}
               defaultValue=""
             />
-
-            <FormControl.ErrorMessage _text={{
-              fontSize: 'xs'
-            }}>
+            <FormControl.ErrorMessage
+              _text={{
+                fontSize: 'xs',
+              }}
+            >
               Password should contain between 3 and 8 characters.
             </FormControl.ErrorMessage>
-            <HStack space={2} flexShrink={1}>
-
-            </HStack>
+            <HStack space={2} flexShrink={1}></HStack>
           </FormControl>
           <Collapse isOpen={hasLoginError !== false}>
-            <Alert w="100%" status={"error"}>
+            <Alert w="100%" status={'error'}>
               <VStack space={2} flexShrink={1} w="100%">
                 <HStack flexShrink={1} space={2} justifyContent="space-between">
                   <HStack space={2} flexShrink={1}>
@@ -142,9 +142,14 @@ export function HomeScreen() {
                       {hasLoginError}
                     </Text>
                   </HStack>
-                  <IconButton variant="unstyled" _focus={{
-                    borderWidth: 0
-                  }} icon={<CloseIcon size="3" color="coolGray.600" />} onPress={() => setHasLoginError(false)} />
+                  <IconButton
+                    variant="unstyled"
+                    _focus={{
+                      borderWidth: 0,
+                    }}
+                    icon={<CloseIcon size="3" color="coolGray.600" />}
+                    onPress={() => setHasLoginError(false)}
+                  />
                 </HStack>
               </VStack>
             </Alert>
@@ -157,6 +162,3 @@ export function HomeScreen() {
     </Center>
   )
 }
-
-
-

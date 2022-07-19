@@ -1,15 +1,12 @@
 import React from 'react'
-import {
-  useColorMode,
-  Tooltip,
-  IconButton,
-  CloseIcon
-} from 'native-base'
-import { auth } from 'app/components/firebase';
-import { signOut } from "firebase/auth";
+import { Tooltip, IconButton, CloseIcon } from 'native-base'
+import { auth } from 'app/components/firebase'
+import { signOut } from 'firebase/auth'
 
 export function LogOut() {
-  const getOut = () => { signOut(auth) }
+  const getOut = () => {
+    signOut(auth)
+  }
   return (
     <Tooltip
       label={'SignOut'}
@@ -25,6 +22,6 @@ export function LogOut() {
         icon={<CloseIcon />}
         accessibilityLabel="SignOut"
       />
-    </Tooltip >
+    </Tooltip>
   )
 }
